@@ -1,0 +1,24 @@
+name: Sync Fork
+
+on:
+  schedule:
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - run: git remote add upstream https://github.com/yoheinakajima/babyagi.git
+
+      - run: git fetch upstream
+
+      - run: |
+          git checkout main
+          git reset --hard upstream/main
+          git push origin main --force
